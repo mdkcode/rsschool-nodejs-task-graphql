@@ -12,6 +12,7 @@ export const createGqlResponseSchema = {
     {
       query: Type.String(),
       variables: Type.Optional(Type.Record(Type.String(), Type.Any())),
+      operationName: Type.Optional(Type.String()),
     },
     {
       additionalProperties: false,
