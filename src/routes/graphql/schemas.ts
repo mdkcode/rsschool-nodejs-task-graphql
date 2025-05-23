@@ -1,4 +1,4 @@
-import { Type } from '@fastify/type-provider-typebox';
+import { Static, Type } from '@fastify/type-provider-typebox';
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -12,10 +12,16 @@ export const createGqlResponseSchema = {
     {
       query: Type.String(),
       variables: Type.Optional(Type.Record(Type.String(), Type.Any())),
-      operationName: Type.Optional(Type.String()),
     },
     {
       additionalProperties: false,
     },
   ),
 };
+
+export const gqlGetRequestQuerystringSchema = Type.Object({
+  query: Type.String(),
+  variables: Type.Optional(Type.String()),
+});
+
+export type GqlGetRequestQuerystring = Static<typeof gqlGetRequestQuerystringSchema>;
