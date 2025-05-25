@@ -118,21 +118,21 @@ const User = new GraphQLObjectType({
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
       resolve: async (parent, _, context) => {
-        const userWithSubscriptions = await context.prisma.user.findUnique({
-          where: { id: parent.id },
-          include: { userSubscribedTo: true },
+        const subs = await context.prisma.subscribersOnAuthors.findMany({
+          where: { subscriberId: parent.id },
+          include: { author: true },
         });
-        return userWithSubscriptions?.userSubscribedTo ?? [];
+        return subs.map((entry) => entry.author);
       },
     },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
       resolve: async (parent, _, context) => {
-        const userWithSubscribers = await context.prisma.user.findUnique({
-          where: { id: parent.id },
-          include: { subscribedToUser: true },
+        const subs = await context.prisma.subscribersOnAuthors.findMany({
+          where: { authorId: parent.id },
+          include: { subscriber: true },
         });
-        return userWithSubscribers?.subscribedToUser ?? [];
+        return subs.map((sub) => sub.subscriber);
       },
     },
   }),
