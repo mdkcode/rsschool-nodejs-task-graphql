@@ -7,6 +7,7 @@ import {
 import { graphql } from 'graphql';
 import { schema } from './gqlSchemas.js';
 import { checkDepthLimit } from './depthLimit.js';
+import { createUserLoaders } from './loader.js';
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
@@ -32,7 +33,10 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         schema,
         source: query,
         variableValues: variables,
-        contextValue: { prisma },
+        contextValue: {
+          prisma,
+          ...createUserLoaders(prisma),
+        },
       });
 
       return result;
@@ -62,7 +66,10 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         schema,
         source: query,
         variableValues: getVariables,
-        contextValue: { prisma },
+        contextValue: {
+          prisma,
+          ...createUserLoaders(prisma),
+        },
       });
 
       return result;
